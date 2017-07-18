@@ -457,7 +457,7 @@ final public class Repository {
 		guard result == GIT_OK.rawValue else {
 			return Result.failure(NSError(gitError: result, pointOfFailure: "git_repository_set_head"))
 		}
-		return Result.success()
+		return Result.success(())
 	}
 
 	/// Set HEAD to the given reference.
@@ -469,7 +469,7 @@ final public class Repository {
 		guard result == GIT_OK.rawValue else {
 			return Result.failure(NSError(gitError: result, pointOfFailure: "git_repository_set_head"))
 		}
-		return Result.success()
+		return Result.success(())
 	}
 
 	/// Check out HEAD.
@@ -485,7 +485,7 @@ final public class Repository {
 			return Result.failure(NSError(gitError: result, pointOfFailure: "git_checkout_head"))
 		}
 
-		return Result.success()
+		return Result.success(())
 	}
 
 	/// Check out the given OID.
@@ -496,7 +496,9 @@ final public class Repository {
 	/// :returns: Returns a result with void or the error that occurred.
 	public func checkout(_ oid: OID, strategy: CheckoutStrategy,
 	                     progress: CheckoutProgressBlock? = nil) -> Result<(), NSError> {
-		return setHEAD(oid).flatMap { self.checkout(strategy: strategy, progress: progress) }
+		return setHEAD(oid).flatMap { _ -> Result<(), NSError> in
+			return self.checkout(strategy: strategy, progress: progress)
+		}
 	}
 
 	/// Check out the given reference.
@@ -507,7 +509,9 @@ final public class Repository {
 	/// :returns: Returns a result with void or the error that occurred.
 	public func checkout(_ reference: ReferenceType, strategy: CheckoutStrategy,
 	                     progress: CheckoutProgressBlock? = nil) -> Result<(), NSError> {
-		return setHEAD(reference).flatMap { self.checkout(strategy: strategy, progress: progress) }
+		return setHEAD(reference).flatMap { _ -> Result<(), NSError> in
+			return self.checkout(strategy: strategy, progress: progress)
+		}
 	}
 	
 	/// Load all commits in the specified branch in topological & time order descending
